@@ -715,6 +715,9 @@ body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: 
             <div class="input-group submit-btn-wrap">
                 <p><button class="theme-btn" type="submit" name="submit" id="submit">send message</button></p>
             </div>
+			<div id="spinner" style="display: none;">
+    <img src="wp-content/themes/drake/assets/images/loading.gif" alt="Loading...">
+</div>
         </div>
     </div>
 </form>
@@ -726,11 +729,14 @@ function handleSubmit(event) {
     var form = event.target;
     var successMessage = document.getElementById('success-message');
     var errorMessage = document.getElementById('error-message');
+    var spinner = document.getElementById('spinner');
 
     if (!form.checkValidity()) {
         errorMessage.style.display = 'block';
         return;
     }
+
+    spinner.style.display = 'block';
 
     fetch('/', {
         method: 'POST',
@@ -738,8 +744,10 @@ function handleSubmit(event) {
     }).then(() => {
         successMessage.style.display = 'block';
         form.reset();
+        spinner.style.display = 'none';
     }).catch((error) => {
         console.error(error);
+        spinner.style.display = 'none';
     });
 }
 </script>
