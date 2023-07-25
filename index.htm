@@ -663,19 +663,22 @@ body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: 
                             
 <div class="wpcf7 no-js" id="wpcf7-f172-p8-o1" lang="en-US" dir="ltr">
 <div class="screen-reader-response"><p role="status" aria-live="polite" aria-atomic="true"></p> <ul></ul></div>
-<form name="contact" method="POST" data-netlify="true">
-    <div class="alert alert-success messenger-box-contact__msg" style="display: none" role="alert">
+<form name="contact" method="POST" data-netlify="true" onsubmit="handleSubmit(event)">
+    <div class="alert alert-success messenger-box-contact__msg" id="success-message" style="display: none" role="alert">
         <p>Your message was sent successfully.</p>
+    </div>
+    <div class="alert alert-danger messenger-box-contact__msg" id="error-message" style="display: none" role="alert">
+        <p>Please fill out all required fields.</p>
     </div>
     <div class="row">
         <div class="col-md-6">
             <div class="input-group">
-                <p><label for="full-name">full Name <sup>*</sup></label><input size="40" class="input-group" id="full-name" placeholder="Your Full Name" value="" type="text" name="full-name"></p>
+                <p><label for="full-name">full Name <sup>*</sup></label><input size="40" class="input-group" id="full-name" placeholder="Your Full Name" value="" type="text" name="full-name" required></p>
             </div>
         </div>
         <div class="col-md-6">
             <div class="input-group">
-                <p><label for="email">Email <sup>*</sup></label><input size="40" class="input-group" placeholder="Your email adress" value="" type="email" name="email"></p>
+                <p><label for="email">Email <sup>*</sup></label><input size="40" class="input-group" placeholder="Your email adress" value="" type="email" name="email" required></p>
             </div>
         </div>
         <div class="col-md-6">
@@ -687,7 +690,8 @@ body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: 
             <div class="input-group">
                 <p>
                     <label for="subject">subject <sup>*</sup></label>
-                    <select class="input-group" id="subject" name="subject">
+                    <select class="input-group" id="subject" name="subject" required>
+                        <option value="">Please select a subject</option>
                         <option value="Job Opportunity">Job Opportunity</option>
                         <option value="Project Inquiry / Collaboration">Project Inquiry / Collaboration</option>
                         <option value="General Inquiry">General Inquiry</option>
@@ -697,7 +701,7 @@ body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: 
         </div>
         <div class="col-md-12">
             <div class="input-group">
-                <p><label for="message">message</label><textarea cols="40" rows="2" class="input-group" id="message" placeholder="Write your message here ..." name="message"></textarea></p>
+                <p><label for="message">message</label><textarea cols="40" rows="2" class="input-group" id="message" placeholder="Write your message here ..." name="message" required></textarea></p>
             </div>
         </div>
         <div class="col-md-12">
@@ -714,6 +718,33 @@ body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: 
         </div>
     </div>
 </form>
+
+<script>
+function handleSubmit(event) {
+    event.preventDefault();
+
+    var form = event.target;
+    var successMessage = document.getElementById('success-message');
+    var errorMessage = document.getElementById('error-message');
+
+    if (!form.checkValidity()) {
+        errorMessage.style.display = 'block';
+        return;
+    }
+
+    fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(new FormData(form)).toString()
+    }).then(() => {
+        form.style.display = 'none';
+        successMessage.style.display = 'block';
+    }).catch((error) => {
+        console.error(error);
+    });
+}
+</script>
+
 
 </div>
 
